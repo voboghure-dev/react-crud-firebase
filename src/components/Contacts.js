@@ -1,6 +1,15 @@
-import ContactForm from "./ContactForm";
+import ContactForm from './ContactForm';
+import database from '../firebase';
 
 export default function Contacts() {
+  const addOrEdit = (obj) => {
+    database.child('contacts').push(obj, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  };
+
   return (
     <>
       <div className='p-5 mb-4 bg-light rounded-3'>
@@ -9,10 +18,10 @@ export default function Contacts() {
         </div>
       </div>
       <div className='row'>
-        <div className="col-md-5">
-          <ContactForm />
+        <div className='col-md-5'>
+          <ContactForm addOrEdit={addOrEdit} />
         </div>
-        <div className="col-md-7">
+        <div className='col-md-7'>
           <div>List of contacts</div>
         </div>
       </div>

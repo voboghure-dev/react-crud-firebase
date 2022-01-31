@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function ContactForm() {
+export default function ContactForm(props) {
   const initialFieldValues = {
     fullName: '',
     mobile: '',
@@ -18,8 +18,13 @@ export default function ContactForm() {
     });
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    props.addOrEdit(values);
+  };
+
   return (
-    <form autoComplete='off'>
+    <form autoComplete='off' onSubmit={handleFormSubmit}>
       <div className='input-group flex-nowrap'>
         <span className='input-group-text' id='addon-wrapping'>
           <i className='fas fa-user'></i>
