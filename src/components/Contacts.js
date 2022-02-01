@@ -1,13 +1,19 @@
 import ContactForm from './ContactForm';
 import db from '../firebase';
-import { ref, set, push, onValue } from 'firebase/database';
+import { ref, set, push, update, onValue } from 'firebase/database';
 import { useEffect, useState } from 'react';
 
 export default function Contacts() {
   const [contactObj, setContactObj] = useState({});
+  const [currentId, setCurrentId] = useState('');
 
   const addOrEdit = (obj) => {
-    set(push(ref(db, 'contacts')), obj);
+    if (currentId == '') {
+      set(push(ref(db, 'contacts')), obj);
+    } else {
+      set(ref(db, `contacts/${currentId}`), obj);
+      setCurrentId('');
+    }
   };
 
   useEffect(() => {
@@ -29,7 +35,7 @@ export default function Contacts() {
       </div>
       <div className='row'>
         <div className='col-md-5'>
-          <ContactForm addOrEdit={addOrEdit} />
+          <ContactForm {...{ addOrEdit, currentId, contactObj }} />
         </div>
         <div className='col-md-7'>
           <table className='table table-borderless table-stripped'>
@@ -38,7 +44,7 @@ export default function Contacts() {
                 <th>Full Name</th>
                 <th>Mobile</th>
                 <th>Email</th>
-                <th>Action</th>
+                <th className='text-center'>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -48,7 +54,19 @@ export default function Contacts() {
                     <td>{contactObj[id].fullName}</td>
                     <td>{contactObj[id].mobile}</td>
                     <td>{contactObj[id].email}</td>
-                    <td>Edit | Delete</td>
+                    <td className='text-center'>
+                      <span
+                        className='btn text-primary'
+                        onClick={() => {
+                          setCurrentId(id);
+                        }}
+                      >
+                        <i className='fas fa-pencil-alt'></i>
+                      </span>
+                      <span className='btn text-danger'>
+                        <i className='far fa-trash-alt'></i>
+                      </span>
+                    </td>
                   </tr>
                 );
               })}

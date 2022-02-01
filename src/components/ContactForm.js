@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ContactForm(props) {
   const initialFieldValues = {
@@ -8,11 +8,23 @@ export default function ContactForm(props) {
     address: '',
   };
 
-  const [values, setValue] = useState(initialFieldValues);
+  const [values, setValues] = useState(initialFieldValues);
+
+  useEffect(() => {
+    if (props.currentId == '') {
+      setValues({
+        ...initialFieldValues,
+      });
+    } else {
+      setValues({
+        ...props.contactObj[props.currentId],
+      });
+    }
+  }, [props.currentId, props.contactObj]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setValue({
+    setValues({
       ...values,
       [name]: value,
     });
@@ -21,7 +33,7 @@ export default function ContactForm(props) {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     props.addOrEdit(values);
-    setValue(initialFieldValues);
+    setValues(initialFieldValues);
   };
 
   return (
@@ -88,7 +100,7 @@ export default function ContactForm(props) {
       <div className='input-group flex-nowrap mt-3'>
         <input
           type='submit'
-          value='Save'
+          value={props.currentId == '' ? 'Save' : 'Update'}
           className='btn btn-primary btn-block'
         />
       </div>
