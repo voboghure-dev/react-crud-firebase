@@ -12,7 +12,13 @@ export default function Contacts() {
       set(push(ref(db, 'contacts')), obj);
     } else {
       set(ref(db, `contacts/${currentId}`), obj);
-      setCurrentId('');
+    }
+    setCurrentId('');
+  };
+
+  const onDelete = (id) => {
+    if (window.confirm('Are you sure to delete this record?')) {
+      set(ref(db, `contacts/${id}`), null);
     }
   };
 
@@ -22,6 +28,8 @@ export default function Contacts() {
         setContactObj({
           ...snapshot.val(),
         });
+      } else {
+        setContactObj({});
       }
     });
   }, []);
@@ -63,7 +71,10 @@ export default function Contacts() {
                       >
                         <i className='fas fa-pencil-alt'></i>
                       </span>
-                      <span className='btn text-danger'>
+                      <span
+                        className='btn text-danger'
+                        onClick={() => onDelete(id)}
+                      >
                         <i className='far fa-trash-alt'></i>
                       </span>
                     </td>
