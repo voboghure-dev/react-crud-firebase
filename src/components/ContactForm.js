@@ -21,6 +21,7 @@ export default function ContactForm(props) {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     props.addOrEdit(values);
+    setValue(initialFieldValues);
   };
 
   return (
