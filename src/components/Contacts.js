@@ -1,13 +1,10 @@
 import ContactForm from './ContactForm';
-import database from '../firebase';
+import db from '../firebase';
+import { ref, set, push } from 'firebase/database';
 
 export default function Contacts() {
   const addOrEdit = (obj) => {
-    database.child('contacts').push(obj, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    set(push(ref(db, 'contacts')), obj);
   };
 
   return (
